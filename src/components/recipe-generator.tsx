@@ -193,7 +193,7 @@ export default function RecipeGenerator() {
               className="hidden"
             />
             
-            <ScrollArea className="h-[700px]">
+            <ScrollArea className="h-[calc(100vh-200px)]">
               <div className="space-y-4 pr-4">
                 <div>
                   <Label className="text-base font-semibold">Dietary Preferences</Label>
@@ -248,7 +248,7 @@ export default function RecipeGenerator() {
 
       <div className="lg:col-span-1">
         {isPending && (
-          <Card className="h-full flex flex-col items-center justify-center min-h-[700px]">
+          <Card className="h-full flex flex-col items-center justify-center min-h-[calc(100vh-200px)]">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
             <p className="mt-4 text-lg font-semibold text-muted-foreground">
               Generating your masterpiece...
@@ -312,7 +312,7 @@ export default function RecipeGenerator() {
           </Card>
         )}
         {!isPending && !recipe && (
-          <Card className="h-full flex flex-col items-center justify-center min-h-[700px] text-center">
+          <Card className="h-full flex flex-col items-center justify-center min-h-[calc(100vh-200px)] text-center">
              <CardHeader>
                 <div className="flex justify-center mb-4">
                    <div className="p-4 bg-muted rounded-full">
