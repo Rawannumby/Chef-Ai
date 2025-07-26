@@ -156,87 +156,89 @@ export default function RecipeGenerator() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-      <Card className="lg:col-span-1 sticky top-24">
-        <CardHeader className="border-b">
-          <div className="flex justify-between items-center">
-            <CardTitle className="font-headline text-xl">
-              Select Ingredients
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">{selectedIngredients.length} selected</p>
-          </div>
-        </CardHeader>
-        <CardContent className="p-4 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search ingredients..." 
-              className="pl-9 bg-muted border-0 focus-visible:ring-primary"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+      <div className="lg:col-span-1">
+        <Card className="sticky top-24 w-[473px] h-[700px] flex flex-col">
+          <CardHeader className="border-b">
+            <div className="flex justify-between items-center">
+              <CardTitle className="font-headline text-xl">
+                Select Ingredients
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">{selectedIngredients.length} selected</p>
+            </div>
+          </CardHeader>
+          <CardContent className="p-4 space-y-4 flex-grow flex flex-col">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input 
+                placeholder="Search ingredients..." 
+                className="pl-9 bg-muted border-0 focus-visible:ring-primary"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <Button variant="ghost" className="w-full justify-center gap-2" onClick={() => fileInputRef.current?.click()}>
+              <Camera className="h-4 w-4" />
+              Capture Ingredients
+            </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleImageUpload}
+              accept="image/*"
+              className="hidden"
             />
-          </div>
 
-          <Button variant="ghost" className="w-full justify-center gap-2" onClick={() => fileInputRef.current?.click()}>
-            <Camera className="h-4 w-4" />
-            Capture Ingredients
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageUpload}
-            accept="image/*"
-            className="hidden"
-          />
-
-          <div>
-            <Label className="text-base font-semibold">Dietary Preferences</Label>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
-              {Object.entries(preferences).map(([key, value]) => {
-                const Icon = preferenceIcons[key as keyof typeof preferenceIcons];
-                return (
-                  <div key={key} className="flex items-center space-x-2">
-                     <Checkbox
-                      id={key}
-                      checked={value}
-                      onCheckedChange={() => handlePreferenceChange(key as keyof typeof preferences)}
-                    />
-                    <Icon className="h-4 w-4 text-muted-foreground" />
-                    <Label htmlFor={key} className="font-normal capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</Label>
-                  </div>
-                )
-              })}
+            <div>
+              <Label className="text-base font-semibold">Dietary Preferences</Label>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                {Object.entries(preferences).map(([key, value]) => {
+                  const Icon = preferenceIcons[key as keyof typeof preferenceIcons];
+                  return (
+                    <div key={key} className="flex items-center space-x-2">
+                       <Checkbox
+                        id={key}
+                        checked={value}
+                        onCheckedChange={() => handlePreferenceChange(key as keyof typeof preferences)}
+                      />
+                      <Icon className="h-4 w-4 text-muted-foreground" />
+                      <Label htmlFor={key} className="font-normal capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</Label>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-          
-          <ScrollArea className="h-96">
-            <div className="space-y-4 pr-4">
-            {filteredIngredients.map(([category, ingredients]) => (
-                <div key={category}>
-                  <p className="font-semibold text-muted-foreground text-sm mb-2 uppercase tracking-wider">{category}</p>
-                  <div className="space-y-1">
-                    {ingredients.map((ingredient) => (
-                      <div key={ingredient.name} className="flex items-center p-2 rounded-md hover:bg-muted">
-                        <Checkbox
-                          id={ingredient.name}
-                          onCheckedChange={() => handleIngredientChange(ingredient.name)}
-                          checked={selectedIngredients.includes(ingredient.name)}
-                          className="mr-3"
-                        />
-                        <Label htmlFor={ingredient.name} className="font-normal flex-1 cursor-pointer">{ingredient.name}</Label>
-                        <div className="flex gap-2">
-                           {ingredient.tags.includes('vegetarian') && <Leaf className="h-4 w-4 text-green-500" title="Vegetarian"/>}
-                           {ingredient.tags.includes('vegan') && <Vegan className="h-4 w-4 text-green-700" title="Vegan"/>}
-                           {ingredient.tags.includes('gluten-free') && <WheatOff className="h-4 w-4 text-orange-500" title="Gluten-Free"/>}
+            
+            <ScrollArea className="flex-grow">
+              <div className="space-y-4 pr-4">
+              {filteredIngredients.map(([category, ingredients]) => (
+                  <div key={category}>
+                    <p className="font-semibold text-muted-foreground text-sm mb-2 uppercase tracking-wider">{category}</p>
+                    <div className="space-y-1">
+                      {ingredients.map((ingredient) => (
+                        <div key={ingredient.name} className="flex items-center p-2 rounded-md hover:bg-muted">
+                          <Checkbox
+                            id={ingredient.name}
+                            onCheckedChange={() => handleIngredientChange(ingredient.name)}
+                            checked={selectedIngredients.includes(ingredient.name)}
+                            className="mr-3"
+                          />
+                          <Label htmlFor={ingredient.name} className="font-normal flex-1 cursor-pointer">{ingredient.name}</Label>
+                          <div className="flex gap-2">
+                             {ingredient.tags.includes('vegetarian') && <Leaf className="h-4 w-4 text-green-500" title="Vegetarian"/>}
+                             {ingredient.tags.includes('vegan') && <Vegan className="h-4 w-4 text-green-700" title="Vegan"/>}
+                             {ingredient.tags.includes('gluten-free') && <WheatOff className="h-4 w-4 text-orange-500" title="Gluten-Free"/>}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="lg:col-span-2">
         {isPending && (
