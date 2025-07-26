@@ -4,6 +4,9 @@ import {
   generateRecipeFromIngredients,
   type GenerateRecipeFromIngredientsOutput,
 } from '@/ai/flows/generate-recipe-from-ingredients';
+import {
+    identifyIngredientsFromImage,
+} from '@/ai/flows/identify-ingredients-from-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -76,6 +79,9 @@ const ingredientsData = {
   ]
 };
 
+const allIngredients = Object.values(ingredientsData).flat().map(i => i.name);
+
+
 const preferenceIcons = {
   vegetarian: Leaf,
   vegan: Vegan,
@@ -94,6 +100,7 @@ export default function RecipeGenerator() {
   const [searchTerm, setSearchTerm] = useState('');
   const [recipe, setRecipe] = useState<GenerateRecipeFromIngredientsOutput | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [isRecognizing, startRecognitionTransition] = useTransition();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -150,12 +157,36 @@ export default function RecipeGenerator() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Placeholder for image recognition logic
-      console.log('Image uploaded:', file.name);
-      toast({
-        title: 'Image Uploaded',
-        description: 'Ingredient recognition from image is not implemented yet.',
-      });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const photoDataUri = e.target?.result as string;
+        if (photoDataUri) {
+          startRecognitionTransition(async () => {
+            try {
+              const { ingredients } = await identifyIngredientsFromImage({ photoDataUri });
+              const matchedIngredients = ingredients.filter(identified => 
+                allIngredients.some(available => available.toLowerCase() === identified.toLowerCase())
+              );
+              
+              setSelectedIngredients(prev => [...new Set([...prev, ...matchedIngredients])]);
+
+              toast({
+                title: 'Ingredients Identified',
+                description: `Added ${matchedIngredients.length} ingredients from your image.`,
+              });
+
+            } catch (error) {
+              console.error('Failed to identify ingredients:', error);
+              toast({
+                title: 'Error',
+                description: 'Failed to identify ingredients from the image. Please try again.',
+                variant: 'destructive',
+              });
+            }
+          });
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -192,9 +223,9 @@ export default function RecipeGenerator() {
               />
             </div>
 
-            <Button variant="ghost" className="w-full justify-center gap-2" onClick={() => fileInputRef.current?.click()}>
-              <Camera className="h-4 w-4" />
-              Capture Ingredients
+            <Button variant="ghost" className="w-full justify-center gap-2" onClick={() => fileInputRef.current?.click()} disabled={isRecognizing}>
+              {isRecognizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+              {isRecognizing ? 'Analyzing...' : 'Capture Ingredients'}
             </Button>
             <input
               type="file"
