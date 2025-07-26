@@ -21,15 +21,52 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { ChefHat, Loader2, Salad, Sparkles, Upload } from 'lucide-react';
+import { ChefHat, Loader2, Salad, Sparkles, Upload, Search, Camera, Leaf, WheatOff, Vegan, Beef } from 'lucide-react';
 import React, { useState, useTransition, useRef } from 'react';
+import { Input } from '@/components/ui/input';
 
-const availableIngredients = [
-  'Chicken', 'Beef', 'Pork', 'Fish', 'Tofu', 'Eggs', 'Milk', 'Cheese',
-  'Rice', 'Pasta', 'Potatoes', 'Bread', 'Quinoa', 'Lentils', 'Beans',
-  'Onions', 'Garlic', 'Tomatoes', 'Bell Peppers', 'Carrots', 'Broccoli',
-  'Spinach', 'Mushrooms', 'Avocado', 'Olive Oil', 'Butter', 'Salt', 'Pepper'
-];
+const ingredientsData = {
+  PROTEIN: [
+    { name: 'Chicken Breast', tags: [] },
+    { name: 'Salmon Fillet', tags: [] },
+    { name: 'Tofu', tags: ['vegetarian', 'vegan'] },
+    { name: 'Eggs', tags: ['vegetarian'] },
+  ],
+  GRAINS: [
+    { name: 'Quinoa', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Brown Rice', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Pasta', tags: ['vegetarian', 'vegan'] },
+    { name: 'Bread', tags: ['vegetarian', 'vegan'] },
+  ],
+  VEGETABLES: [
+    { name: 'Onions', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Garlic', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Tomatoes', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Bell Peppers', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Carrots', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Broccoli', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Spinach', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Mushrooms', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Avocado', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+  ],
+  DAIRY: [
+    { name: 'Milk', tags: ['vegetarian'] },
+    { name: 'Cheese', tags: ['vegetarian'] },
+    { name: 'Butter', tags: ['vegetarian'] },
+  ],
+  'OTHER': [
+      { name: 'Olive Oil', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+      { name: 'Salt', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+      { name: 'Pepper', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+  ]
+};
+
+const preferenceIcons = {
+  vegetarian: Leaf,
+  vegan: Vegan,
+  glutenFree: WheatOff,
+  highProtein: Beef,
+};
 
 export default function RecipeGenerator() {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -39,6 +76,7 @@ export default function RecipeGenerator() {
     glutenFree: false,
     highProtein: false,
   });
+  const [searchTerm, setSearchTerm] = useState('');
   const [recipe, setRecipe] = useState<GenerateRecipeFromIngredientsOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -55,6 +93,15 @@ export default function RecipeGenerator() {
   const handlePreferenceChange = (preference: keyof typeof preferences) => {
     setPreferences((prev) => ({ ...prev, [preference]: !prev[preference] }));
   };
+  
+  const filteredIngredients = Object.entries(ingredientsData)
+    .map(([category, ingredients]) => {
+      const filtered = ingredients.filter((ingredient) =>
+        ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      return [category, filtered] as const;
+    })
+    .filter(([, ingredients]) => ingredients.length > 0);
 
   const handleSubmit = () => {
     if (selectedIngredients.length === 0) {
@@ -101,72 +148,84 @@ export default function RecipeGenerator() {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
       <Card className="lg:col-span-1 sticky top-24">
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-2">
-            <ChefHat className="text-primary" />
-            Recipe Creator
-          </CardTitle>
-          <CardDescription>
-            Select ingredients and preferences to craft your perfect dish.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <Label className="text-lg font-semibold">Ingredients</Label>
-              <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Image
-              </Button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-            </div>
-            <ScrollArea className="h-64 mt-2 rounded-md border p-4">
-              <div className="grid grid-cols-2 gap-4">
-                {availableIngredients.map((ingredient) => (
-                  <div key={ingredient} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={ingredient}
-                      onCheckedChange={() => handleIngredientChange(ingredient)}
-                      checked={selectedIngredients.includes(ingredient)}
-                    />
-                    <Label htmlFor={ingredient} className="font-normal">{ingredient}</Label>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
+          <div className="flex justify-between items-center">
+            <CardTitle className="font-headline flex items-center gap-2">
+              Select Ingredients
+            </CardTitle>
+            <Badge variant="outline">{selectedIngredients.length} selected</Badge>
           </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search ingredients..." 
+              className="pl-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <Button variant="outline" className="w-full" onClick={() => fileInputRef.current?.click()}>
+            <Camera className="mr-2 h-4 w-4" />
+            Capture Ingredients
+          </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            className="hidden"
+          />
+
           <div>
-            <Label className="text-lg font-semibold">Dietary Preferences</Label>
-            <div className="space-y-3 mt-2">
-              {Object.keys(preferences).map((key) => (
-                <div key={key} className="flex items-center justify-between rounded-lg border p-3">
-                  <Label htmlFor={key} className="capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</Label>
-                  <Switch
-                    id={key}
-                    checked={preferences[key as keyof typeof preferences]}
-                    onCheckedChange={() => handlePreferenceChange(key as keyof typeof preferences)}
-                  />
+            <Label className="text-base font-semibold">Dietary Preferences</Label>
+            <div className="grid grid-cols-2 gap-4 mt-2">
+              {Object.entries(preferences).map(([key, value]) => {
+                const Icon = preferenceIcons[key as keyof typeof preferenceIcons];
+                return (
+                  <div key={key} className="flex items-center space-x-2">
+                     <Checkbox
+                      id={key}
+                      checked={value}
+                      onCheckedChange={() => handlePreferenceChange(key as keyof typeof preferences)}
+                    />
+                    <Icon className="h-4 w-4 text-muted-foreground" />
+                    <Label htmlFor={key} className="font-normal capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</Label>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+          <Separator />
+          
+          <ScrollArea className="h-72">
+            <div className="space-y-4">
+            {filteredIngredients.map(([category, ingredients]) => (
+                <div key={category}>
+                  <p className="font-semibold text-muted-foreground text-sm mb-2">{category}</p>
+                  <div className="space-y-2">
+                    {ingredients.map((ingredient) => (
+                      <div key={ingredient.name} className="flex items-center p-2 rounded-md hover:bg-muted">
+                        <Checkbox
+                          id={ingredient.name}
+                          onCheckedChange={() => handleIngredientChange(ingredient.name)}
+                          checked={selectedIngredients.includes(ingredient.name)}
+                          className="mr-3"
+                        />
+                        <Label htmlFor={ingredient.name} className="font-normal flex-1">{ingredient.name}</Label>
+                        <div className="flex gap-2">
+                           {ingredient.tags.includes('vegetarian') && <Leaf className="h-4 w-4 text-green-500" />}
+                           {ingredient.tags.includes('vegan') && <Vegan className="h-4 w-4 text-green-700" />}
+                           {ingredient.tags.includes('gluten-free') && <WheatOff className="h-4 w-4 text-orange-500" />}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-          <div>
-            <Label className="text-lg font-semibold">Your Pantry</Label>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {selectedIngredients.length > 0 ? (
-                selectedIngredients.map((ingredient) => (
-                  <Badge key={ingredient} variant="secondary">{ingredient}</Badge>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">Select some ingredients to see them here.</p>
-              )}
-            </div>
-          </div>
+          </ScrollArea>
         </CardContent>
         <CardFooter>
           <Button onClick={handleSubmit} disabled={isPending} className="w-full">
