@@ -346,5 +346,4 @@ const CheckboxRow = ({ id, label, description, defaultChecked }: CheckboxRowProp
     </div>
   </div>
 );
-
     
