@@ -51,7 +51,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="space-y-8">
       <div className="flex items-start gap-4">
         <div className="p-3 bg-muted rounded-lg">
           <Settings className="h-8 w-8 text-foreground" />
