@@ -193,7 +193,7 @@ export default function RecipeGenerator() {
               className="hidden"
             />
             
-            <ScrollArea className="h-[450px]">
+            <ScrollArea className="h-[700px]">
               <div className="space-y-4 pr-4">
                 <div>
                   <Label className="text-base font-semibold">Dietary Preferences</Label>
