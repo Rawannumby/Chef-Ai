@@ -6,6 +6,7 @@ import {
   Settings,
   Clock,
   Heart,
+  ChefHat,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,20 +20,26 @@ import {
 import { cn } from '@/lib/utils';
 
 const menuItems = [
-  {
-    groupLabel: 'Navigation',
+   {
+    groupLabel: 'Main',
     items: [
-      { href: '/', label: 'Dashboard', icon: Home },
-      { href: '/recipes', label: 'Full Recipe View', icon: BookOpen },
-      { href: '/profile', label: 'Profile', icon: User },
-      { href: '/settings', label: 'Settings', icon: Settings },
+      { href: '/', label: 'Home', icon: Home },
+      { href: '/generator', label: 'Recipe Generator', icon: ChefHat },
     ],
   },
   {
-    groupLabel: 'Recipe Collections',
+    groupLabel: 'Library',
     items: [
-      { href: '/recent-recipes', label: 'Recent Recipes', icon: Clock },
-      { href: '/favorite-recipes', label: 'Favorite Recipes', icon: Heart },
+      { href: '/recipes', label: 'All Recipes', icon: BookOpen },
+      { href: '/recent-recipes', label: 'Recent', icon: Clock },
+      { href: '/favorite-recipes', label: 'Favorites', icon: Heart },
+    ],
+  },
+   {
+    groupLabel: 'Account',
+    items: [
+      { href: '/profile', label: 'Profile', icon: User },
+      { href: '/settings', label: 'Settings', icon: Settings },
     ],
   },
 ];
@@ -41,7 +48,7 @@ export function SidebarNav() {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       {menuItems.map((group, index) => (
         <SidebarGroup key={index}>
           <SidebarGroupLabel>{group.groupLabel}</SidebarGroupLabel>

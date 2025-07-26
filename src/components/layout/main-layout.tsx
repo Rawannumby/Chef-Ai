@@ -27,8 +27,22 @@ import {
 } from '@/components/ui/avatar';
 import { LogOut, ChefHat } from 'lucide-react';
 import { ThemeProvider } from 'next-themes';
+import { usePathname } from 'next/navigation';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isLandingPage = pathname === '/';
+
+  if (isLandingPage) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <div className="min-h-screen">
+          <main>{children}</main>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <SidebarProvider>
