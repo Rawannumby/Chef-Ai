@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -15,7 +16,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components/ui/avatar';
-import { LogOut, ChefHat } from 'lucide-react';
+import { LogOut, ChefHat, User } from 'lucide-react';
 import { ThemeProvider } from 'next-themes';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
@@ -42,7 +43,7 @@ function AppSidebar() {
     >
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-3">
-          <div className="bg-primary/20 text-primary p-2 rounded-lg">
+          <div className="bg-primary/10 text-primary p-2 rounded-lg">
             <ChefHat className="h-6 w-6" />
           </div>
           <div className="group-data-[state=expanded]:block hidden">
@@ -58,23 +59,17 @@ function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3 w-full">
-          <Avatar className="h-9 w-9">
-            <AvatarImage
-              src="https://placehold.co/100x100.png"
-              alt="Chef Sarah"
-              data-ai-hint="user avatar"
-            />
-            <AvatarFallback>CS</AvatarFallback>
-          </Avatar>
+           <Avatar className="h-9 w-9 bg-primary/10">
+              <AvatarFallback>
+                <User className="text-primary" />
+              </AvatarFallback>
+            </Avatar>
           <div className="flex-1 group-data-[state=expanded]:block hidden">
             <p className="text-sm font-semibold">Chef Sarah</p>
             <p className="text-xs text-muted-foreground">
               sarah.chef@example.com
             </p>
           </div>
-          <button className="p-2 rounded-md hover:bg-muted-foreground/10 group-data-[state=expanded]:block hidden">
-            <LogOut className="w-4 h-4" />
-          </button>
         </div>
       </SidebarFooter>
     </Sidebar>

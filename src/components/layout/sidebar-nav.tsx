@@ -1,12 +1,11 @@
+
 'use client';
 import {
   Home,
-  BookOpen,
   User,
   Settings,
   Clock,
   Heart,
-  ChefHat,
   ChevronRight,
   LayoutDashboard,
 } from 'lucide-react';
@@ -24,7 +23,7 @@ const menuItems = [
    {
     groupLabel: 'Navigation',
     items: [
-      { href: '/generator', label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/generator', label: 'Dashboard', icon: Home },
       { href: '/profile', label: 'Profile', icon: User },
       { href: '/settings', label: 'Settings', icon: Settings },
     ],
