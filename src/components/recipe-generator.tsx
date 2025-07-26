@@ -22,7 +22,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { ChefHat, Loader2, Salad, Sparkles, Upload, Search, Camera, Leaf, WheatOff, Vegan, Beef, Heart, Clock, BrainCircuit } from 'lucide-react';
+import { ChefHat, Loader2, Salad, Sparkles, Upload, Search, Camera, Leaf, WheatOff, Vegan, Beef, Heart, Clock, BrainCircuit, Filter } from 'lucide-react';
 import React, { useState, useTransition, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
@@ -167,7 +167,10 @@ export default function RecipeGenerator() {
               <CardTitle className="text-lg font-semibold">
                 Select Ingredients
               </CardTitle>
-              <p className="text-sm text-muted-foreground">{selectedIngredients.length} selected</p>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>{selectedIngredients.length} selected</span>
+                <Filter className="h-4 w-4" />
+              </div>
             </div>
           </CardHeader>
           <CardContent className="p-4 space-y-4">
@@ -319,7 +322,7 @@ export default function RecipeGenerator() {
                        <ChefHat className="h-10 w-10 text-muted-foreground" />
                     </div>
                 </div>
-                <CardTitle className="text-2xl mt-4">AI Generated Recipes</CardTitle>
+                <CardTitle className="text-2xl mt-4">Ready to Cook with AI?</CardTitle>
                 <CardDescription className="max-w-xs mx-auto">
                     Select ingredients from the left panel to generate personalized recipes using Google Gemini AI.
                 </CardDescription>
