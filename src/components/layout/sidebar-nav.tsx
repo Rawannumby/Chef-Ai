@@ -7,6 +7,8 @@ import {
   Clock,
   Heart,
   ChefHat,
+  ChevronRight,
+  LayoutDashboard,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -17,29 +19,22 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
 
 const menuItems = [
    {
-    groupLabel: 'Main',
+    groupLabel: 'Navigation',
     items: [
-      { href: '/', label: 'Home', icon: Home },
-      { href: '/generator', label: 'Recipe Generator', icon: ChefHat },
+      { href: '/generator', label: 'Dashboard', icon: LayoutDashboard },
+      { href: '/recipes', label: 'Full Recipe View', icon: BookOpen },
+      { href: '/profile', label: 'Profile', icon: User },
+      { href: '/settings', label: 'Settings', icon: Settings },
     ],
   },
   {
-    groupLabel: 'Library',
+    groupLabel: 'Recipe Collections',
     items: [
-      { href: '/recipes', label: 'All Recipes', icon: BookOpen },
-      { href: '/recent-recipes', label: 'Recent', icon: Clock },
-      { href: '/favorite-recipes', label: 'Favorites', icon: Heart },
-    ],
-  },
-   {
-    groupLabel: 'Account',
-    items: [
-      { href: '/profile', label: 'Profile', icon: User },
-      { href: '/settings', label: 'Settings', icon: Settings },
+      { href: '/recent-recipes', label: 'Recent Recipes', icon: Clock, suffix: <ChevronRight className="h-4 w-4" /> },
+      { href: '/favorite-recipes', label: 'Favorite Recipes', icon: Heart, suffix: <ChevronRight className="h-4 w-4" /> },
     ],
   },
 ];
@@ -59,9 +54,13 @@ export function SidebarNav() {
                   <SidebarMenuButton
                     isActive={pathname === item.href}
                     tooltip={item.label}
+                    className="justify-between"
                   >
-                    <item.icon className="h-5 w-5" />
-                    <span className="truncate">{item.label}</span>
+                    <div className="flex items-center gap-3">
+                      <item.icon className="h-5 w-5" />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    {item.suffix}
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>

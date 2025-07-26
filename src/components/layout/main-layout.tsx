@@ -7,16 +7,6 @@ import {
   SidebarHeader,
   SidebarContent,
   SidebarFooter,
-  SidebarInset,
-  SidebarTrigger,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-  SidebarGroup,
-  useSidebar,
 } from '@/components/ui/sidebar';
 import { Header } from '@/components/layout/header';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
@@ -27,30 +17,17 @@ import {
 } from '@/components/ui/avatar';
 import { LogOut, ChefHat } from 'lucide-react';
 import { ThemeProvider } from 'next-themes';
-import { usePathname } from 'next/navigation';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isLandingPage = pathname === '/';
-
-  if (isLandingPage) {
-    return (
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <div className="min-h-screen">
-          <main>{children}</main>
-        </div>
-      </ThemeProvider>
-    );
-  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <SidebarProvider>
         <div className="flex min-h-screen">
           <AppSidebar />
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col">
             <Header />
-            <main className="p-4 sm:p-6 lg:p-8">{children}</main>
+            <main className="p-4 sm:p-6 lg:p-8 flex-1">{children}</main>
           </div>
         </div>
       </SidebarProvider>
@@ -59,11 +36,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 }
 
 function AppSidebar() {
-  const { isMobile, state } = useSidebar();
   return (
     <Sidebar
-      collapsible={isMobile ? 'offcanvas' : 'icon'}
-      className="border-r"
+      className="border-r bg-sidebar text-sidebar-foreground"
     >
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-3">
@@ -77,12 +52,11 @@ function AppSidebar() {
             </p>
           </div>
         </div>
-        <SidebarTrigger className="absolute right-2 top-3 group-data-[state=expanded]:block hidden" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarNav />
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t">
+      <SidebarFooter className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3 w-full">
           <Avatar className="h-9 w-9">
             <AvatarImage

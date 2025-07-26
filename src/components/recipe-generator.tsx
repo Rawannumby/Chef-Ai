@@ -43,6 +43,12 @@ const ingredientsData = {
         { name: 'Onions', tags: ['vegetarian', 'vegan', 'gluten-free'] },
         { name: 'Garlic', tags: ['vegetarian', 'vegan', 'gluten-free'] },
         { name: 'Tomatoes', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Broccoli', tags: ['vegetarian', 'vegan', 'gluten-free']},
+        { name: 'Spinach', tags: ['vegetarian', 'vegan', 'gluten-free']},
+        { name: 'Bell Peppers', tags: ['vegetarian', 'vegan', 'gluten-free']},
+        { name: 'Carrots', tags: ['vegetarian', 'vegan', 'gluten-free']},
+        { name: 'Zucchini', tags: ['vegetarian', 'vegan', 'gluten-free']},
+        { name: 'Mushrooms', tags: ['vegetarian', 'vegan', 'gluten-free']},
     ],
     DAIRY: [
         { name: 'Milk', tags: ['vegetarian'] },
@@ -153,12 +159,12 @@ export default function RecipeGenerator() {
 
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       <div className="lg:col-span-1">
-        <Card className="sticky top-24">
-          <CardHeader className="border-b">
+        <Card>
+          <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle className="font-headline text-xl">
+              <CardTitle className="text-xl">
                 Select Ingredients
               </CardTitle>
               <p className="text-sm text-muted-foreground">{selectedIngredients.length} selected</p>
@@ -175,7 +181,7 @@ export default function RecipeGenerator() {
               />
             </div>
 
-            <Button variant="ghost" className="w-full justify-center gap-2" onClick={() => fileInputRef.current?.click()} disabled={isRecognizing}>
+            <Button variant="ghost" className="w-full justify-center gap-2 text-muted-foreground" onClick={() => fileInputRef.current?.click()} disabled={isRecognizing}>
               {isRecognizing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
               {isRecognizing ? 'Analyzing...' : 'Capture Ingredients'}
             </Button>
@@ -186,29 +192,31 @@ export default function RecipeGenerator() {
               accept="image/*"
               className="hidden"
             />
-
-            <div>
-              <Label className="text-base font-semibold">Dietary Preferences</Label>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
-                {Object.entries(preferences).map(([key, value]) => {
-                  const Icon = preferenceIcons[key as keyof typeof preferenceIcons];
-                  return (
-                    <div key={key} className="flex items-center space-x-2">
-                       <Checkbox
-                        id={key}
-                        checked={value}
-                        onCheckedChange={() => handlePreferenceChange(key as keyof typeof preferences)}
-                      />
-                      <Icon className="h-4 w-4 text-muted-foreground" />
-                      <Label htmlFor={key} className="font-normal capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</Label>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
             
-            <ScrollArea className="h-64">
+            <ScrollArea className="h-[450px]">
               <div className="space-y-4 pr-4">
+                <div>
+                  <Label className="text-base font-semibold">Dietary Preferences</Label>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-2">
+                    {Object.entries(preferences).map(([key, value]) => {
+                      const Icon = preferenceIcons[key as keyof typeof preferenceIcons];
+                      return (
+                        <div key={key} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={key}
+                            checked={value}
+                            onCheckedChange={() => handlePreferenceChange(key as keyof typeof preferences)}
+                          />
+                          <Label htmlFor={key} className="font-normal capitalize flex items-center gap-2">
+                            <Icon className="h-4 w-4 text-muted-foreground" />
+                            {key.replace(/([A-Z])/g, ' $1').trim()}
+                          </Label>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
               {filteredIngredients.map(([category, ingredients]) => (
                   <div key={category}>
                     <p className="font-semibold text-muted-foreground text-sm mb-2 uppercase tracking-wider">{category}</p>
@@ -238,14 +246,14 @@ export default function RecipeGenerator() {
         </Card>
       </div>
 
-      <div className="lg:col-span-2">
+      <div className="lg:col-span-1">
         {isPending && (
-          <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)] rounded-lg border-2 border-dashed">
+          <Card className="h-full flex flex-col items-center justify-center min-h-[700px]">
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
             <p className="mt-4 text-lg font-semibold text-muted-foreground">
               Generating your masterpiece...
             </p>
-          </div>
+          </Card>
         )}
         {!isPending && recipe && (
           <Card className="animate-in fade-in-50">
@@ -304,14 +312,14 @@ export default function RecipeGenerator() {
           </Card>
         )}
         {!isPending && !recipe && (
-          <div className="flex flex-col items-center justify-center h-[calc(100vh-12rem)] rounded-lg border bg-card text-card-foreground">
-             <CardHeader className="text-center">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-muted rounded-full">
-                     <ChefHat className="h-8 w-8 text-muted-foreground" />
-                  </div>
+          <Card className="h-full flex flex-col items-center justify-center min-h-[700px] text-center">
+             <CardHeader>
+                <div className="flex justify-center mb-4">
+                   <div className="p-4 bg-muted rounded-full">
+                       <ChefHat className="h-10 w-10 text-muted-foreground" />
+                    </div>
                 </div>
-                <CardTitle className="font-headline text-2xl mt-4">Ready to Cook with AI?</CardTitle>
+                <CardTitle className="text-2xl mt-4">AI Generated Recipes</CardTitle>
                 <CardDescription className="max-w-xs mx-auto">
                     Select ingredients from the left panel to generate personalized recipes using Google Gemini AI.
                 </CardDescription>
@@ -319,7 +327,7 @@ export default function RecipeGenerator() {
              <CardContent>
                 <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
-                        <BrainCircuit className="h-4 w-4" />
+                        <Sparkles className="h-4 w-4" />
                         <span>AI-powered</span>
                     </div>
                      <div className="flex items-center gap-2">
@@ -332,11 +340,9 @@ export default function RecipeGenerator() {
                     </div>
                 </div>
              </CardContent>
-          </div>
+          </Card>
         )}
       </div>
     </div>
   );
 }
-
-    
