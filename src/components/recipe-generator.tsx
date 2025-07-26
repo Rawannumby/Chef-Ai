@@ -1,12 +1,10 @@
+
 'use client';
 
 import {
   generateRecipeFromIngredients,
   type GenerateRecipeFromIngredientsOutput,
 } from '@/ai/flows/generate-recipe-from-ingredients';
-import {
-    identifyIngredientsFromImage,
-} from '@/ai/flows/identify-ingredients-from-image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,54 +27,33 @@ import React, { useState, useTransition, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 
 const ingredientsData = {
-  PROTEIN: [
-    { name: 'Chicken Breast', tags: [] },
-    { name: 'Salmon Fillet', tags: [] },
-    { name: 'Tofu', tags: ['vegetarian', 'vegan'] },
-    { name: 'Eggs', tags: ['vegetarian'] },
-  ],
-  GRAINS: [
-    { name: 'Quinoa', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Brown Rice', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Pasta', tags: ['vegetarian', 'vegan'] },
-    { name: 'Bread', tags: ['vegetarian', 'vegan'] },
-  ],
-  VEGETABLES: [
-    { name: 'Onions', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Garlic', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Tomatoes', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Bell Peppers', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Carrots', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Broccoli', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Spinach', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Mushrooms', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Avocado', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Potato', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Sweet Potato', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Zucchini', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Cucumber', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Lettuce', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Kale', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Celery', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Eggplant', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Corn', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Green Beans', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Peas', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Asparagus', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Cauliflower', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Cabbage', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-    { name: 'Bitter Gourd', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-  ],
-  DAIRY: [
-    { name: 'Milk', tags: ['vegetarian'] },
-    { name: 'Cheese', tags: ['vegetarian'] },
-    { name: 'Butter', tags: ['vegetarian'] },
-  ],
-  'OTHER': [
-      { name: 'Olive Oil', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-      { name: 'Salt', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-      { name: 'Pepper', tags: ['vegetarian', 'vegan', 'gluten-free'] },
-  ]
+    PROTEIN: [
+        { name: 'Chicken Breast', tags: [] },
+        { name: 'Salmon Fillet', tags: [] },
+        { name: 'Tofu', tags: ['vegetarian', 'vegan'] },
+        { name: 'Eggs', tags: ['vegetarian'] },
+    ],
+    GRAINS: [
+        { name: 'Quinoa', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Brown Rice', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Pasta', tags: ['vegetarian', 'vegan'] },
+        { name: 'Bread', tags: ['vegetarian', 'vegan'] },
+    ],
+    VEGETABLES: [
+        { name: 'Onions', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Garlic', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Tomatoes', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    ],
+    DAIRY: [
+        { name: 'Milk', tags: ['vegetarian'] },
+        { name: 'Cheese', tags: ['vegetarian'] },
+        { name: 'Butter', tags: ['vegetarian'] },
+    ],
+    'OTHER': [
+        { name: 'Olive Oil', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Salt', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+        { name: 'Pepper', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    ]
 };
 
 const allIngredients = Object.values(ingredientsData).flat().map(i => i.name);
@@ -157,36 +134,11 @@ export default function RecipeGenerator() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const photoDataUri = e.target?.result as string;
-        if (photoDataUri) {
-          startRecognitionTransition(async () => {
-            try {
-              const { ingredients } = await identifyIngredientsFromImage({ photoDataUri });
-              const matchedIngredients = ingredients.filter(identified => 
-                allIngredients.some(available => available.toLowerCase() === identified.toLowerCase())
-              );
-              
-              setSelectedIngredients(prev => [...new Set([...prev, ...matchedIngredients])]);
-
-              toast({
-                title: 'Ingredients Identified',
-                description: `Added ${matchedIngredients.length} ingredients from your image.`,
-              });
-
-            } catch (error) {
-              console.error('Failed to identify ingredients:', error);
-              toast({
-                title: 'Error',
-                description: 'Failed to identify ingredients from the image. Please try again.',
-                variant: 'destructive',
-              });
-            }
-          });
-        }
-      };
-      reader.readAsDataURL(file);
+      // Placeholder for image recognition logic
+      toast({
+        title: 'Image Uploaded',
+        description: 'Image recognition is not yet implemented.',
+      });
     }
   };
 
@@ -386,3 +338,5 @@ export default function RecipeGenerator() {
     </div>
   );
 }
+
+    
