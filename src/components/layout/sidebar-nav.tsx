@@ -25,7 +25,6 @@ const menuItems = [
     groupLabel: 'Navigation',
     items: [
       { href: '/generator', label: 'Dashboard', icon: LayoutDashboard },
-      { href: '/recipes', label: 'Full Recipe View', icon: BookOpen },
       { href: '/profile', label: 'Profile', icon: User },
       { href: '/settings', label: 'Settings', icon: Settings },
     ],
