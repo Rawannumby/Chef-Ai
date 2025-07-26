@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Settings, Shield, Palette, Bell, KeyRound, MonitorSmartphone, LogOut, Sun, Moon, Type, Languages, RefreshCw, Mail, Smartphone, Newspaper, Utensils, Star, Rows4, Columns4 } from "lucide-react";
+import { Settings, Shield, Palette, Bell, KeyRound, MonitorSmartphone, LogOut, Sun, Moon, Type, Languages, RefreshCw, Mail, Smartphone, Newspaper, Utensils, Star, Rows4, Columns4, Database, Trash2, Download, Eye, FileText, Cookie, LifeBuoy, BookOpen, Video, Send } from "lucide-react";
 import { useTheme } from 'next-themes';
+import Link from 'next/link';
 
 const settingsItems = [
   {
@@ -31,10 +32,22 @@ const settingsItems = [
     title: "Notification Settings",
     description: "Manage email, push notifications, and cooking reminders",
   },
+  {
+    value: "data-management",
+    icon: Database,
+    title: "Data Management",
+    description: "Export data, clear cache, and manage account deletion",
+  },
+  {
+    value: "need-help",
+    icon: LifeBuoy,
+    title: "Need Help?",
+    description: "Contact support, read user guides, or watch video tutorials",
+  },
 ];
 
 export default function SettingsPage() {
-  const [openItems, setOpenItems] = useState<string[]>(['security', 'display', 'notifications']);
+  const [openItems, setOpenItems] = useState<string[]>(['security', 'display', 'notifications', 'data-management', 'need-help']);
   const { theme, setTheme } = useTheme();
 
   const handleExpandAll = () => {
@@ -187,17 +200,114 @@ export default function SettingsPage() {
                     <div>
                         <h4 className="font-semibold text-base mb-2">Recipe Notifications</h4>
                         <div className="space-y-4">
-                            <CheckboxRow id="cooking-reminders" label="Cooking Reminders" description="Reminders for meal planning and cooking times" />
-                            <CheckboxRow id="favorite-updates" label="Favorite Recipe Updates" description="Get notified when your favorite recipes are updated" defaultChecked />
+                           <CheckboxRow id="cooking-reminders" label="Cooking Reminders" description="Reminders for meal planning and cooking times" />
+                           <CheckboxRow id="favorite-updates" label="Favorite Recipe Updates" description="Get notified when your favorite recipes are updated" defaultChecked />
+                           <CheckboxRow id="promotional-content" label="Promotional Content" description="Special offers, new features, and cooking tips" />
+                        </div>
+                    </div>
+                     <div>
+                        <h4 className="font-semibold text-base mb-2 mt-4">Notification Frequency</h4>
+                        <div className="space-y-4">
+                            <SettingsRow title="Notification Frequency" description="">
+                                <Select defaultValue="daily">
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Select frequency" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="daily">Daily</SelectItem>
+                                        <SelectItem value="weekly">Weekly</SelectItem>
+                                        <SelectItem value="monthly">Monthly</SelectItem>
+                                        <SelectItem value="never">Never</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </SettingsRow>
+                            <SettingsRow title="Quiet Hours" description="Mute notifications during these hours">
+                                <Switch />
+                            </SettingsRow>
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-end pt-6">
+                <div className="flex justify-between pt-6">
+                    <Button variant="outline"><Send className="mr-2" /> Send Test Notification</Button>
                     <Button>Save Notification Settings</Button>
                 </div>
            </AccordionContent>
         </AccordionItem>
+        
+        <AccordionItem value="data-management" className="border rounded-lg bg-card overflow-hidden">
+           <AccordionTrigger className="p-6 hover:no-underline">
+                <div className="flex items-center gap-4">
+                    <Database className="h-6 w-6 text-muted-foreground" />
+                    <div>
+                        <h3 className="text-lg font-semibold text-left">Data Management</h3>
+                        <p className="text-sm text-muted-foreground text-left">Export data, clear cache, and manage account deletion</p>
+                    </div>
+                </div>
+           </AccordionTrigger>
+           <AccordionContent className="px-6 pb-6 space-y-6">
+                <div>
+                    <h4 className="font-semibold text-base mb-2">Your Data Overview</h4>
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm text-muted-foreground">
+                        <div className="flex justify-between"><span>Recipes Created:</span><span className="font-medium text-foreground">47</span></div>
+                        <div className="flex justify-between"><span>Favorite Recipes:</span><span className="font-medium text-foreground">12</span></div>
+                        <div className="flex justify-between"><span>Cooking Sessions:</span><span className="font-medium text-foreground">156</span></div>
+                        <div className="flex justify-between"><span>Saved Ingredients:</span><span className="font-medium text-foreground">89</span></div>
+                        <div className="flex justify-between"><span>Reviews Written:</span><span className="font-medium text-foreground">23</span></div>
+                        <div className="flex justify-between"><span>Total Data Size:</span><span className="font-medium text-foreground">2.4 MB</span></div>
+                    </div>
+                </div>
+                <SettingsRow title="Export Personal Data" description="Download all your recipes, preferences, and cooking history">
+                    <Button variant="outline" size="sm"><Download className="mr-2"/>Export</Button>
+                </SettingsRow>
+                <SettingsRow title="Clear Application Cache" description="Free up storage space and resolve performance issues">
+                    <Button variant="outline" size="sm"><Trash2 className="mr-2"/>Clear Cache</Button>
+                </SettingsRow>
+                 <div>
+                    <h4 className="font-semibold text-base mb-2">Privacy Controls</h4>
+                    <div className="space-y-2">
+                        <Link href="#" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"><Eye className="h-4 w-4" /> View Privacy Policy</Link>
+                        <Link href="#" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"><FileText className="h-4 w-4" /> Terms of Service</Link>
+                        <Link href="#" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"><Cookie className="h-4 w-4" /> Cookie Preferences</Link>
+                    </div>
+                </div>
+                <SettingsRow title="Delete Account" description="Permanently delete your account and all associated data" isLast>
+                    <Button variant="destructive" size="sm"><Trash2 className="mr-2"/>Delete</Button>
+                </SettingsRow>
+           </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="need-help" className="border rounded-lg bg-card overflow-hidden">
+           <AccordionTrigger className="p-6 hover:no-underline">
+                <div className="flex items-center gap-4">
+                    <LifeBuoy className="h-6 w-6 text-muted-foreground" />
+                    <div>
+                        <h3 className="text-lg font-semibold text-left">Need Help?</h3>
+                        <p className="text-sm text-muted-foreground text-left">Can't find what you're looking for? Our support team is here to help.</p>
+                    </div>
+                </div>
+           </AccordionTrigger>
+           <AccordionContent className="px-6 pb-6">
+              <div className="flex items-center gap-4">
+                <Button variant="outline"><Mail className="mr-2" /> Contact Support</Button>
+                <Button variant="outline"><BookOpen className="mr-2" /> User Guide</Button>
+                <Button variant="outline"><Video className="mr-2" /> Video Tutorials</Button>
+              </div>
+           </AccordionContent>
+        </AccordionItem>
       </Accordion>
+
+      <footer className="text-center text-xs text-muted-foreground space-y-2 pt-8">
+        <div className="flex justify-center items-center gap-4">
+            <span>ChefAI v2.1.0</span>
+            <span>•</span>
+            <span>Last updated: 27/7/2025</span>
+        </div>
+        <div className="flex justify-center items-center gap-4">
+            <Link href="#" className="hover:text-primary">Privacy Policy</Link>
+            <Link href="#" className="hover:text-primary">Terms of Service</Link>
+        </div>
+        <p>© 2025 ChefAI. All rights reserved.</p>
+      </footer>
     </div>
   );
 }
@@ -214,7 +324,7 @@ const SettingsRow = ({ title, description, children, isLast = false }: SettingsR
   <div className={`flex justify-between items-center ${!isLast && 'border-b pb-6'}`}>
     <div>
       <p className="font-medium">{title}</p>
-      <p className="text-sm text-muted-foreground">{description}</p>
+      {description && <p className="text-sm text-muted-foreground">{description}</p>}
     </div>
     {children}
   </div>
@@ -236,3 +346,5 @@ const CheckboxRow = ({ id, label, description, defaultChecked }: CheckboxRowProp
     </div>
   </div>
 );
+
+    
