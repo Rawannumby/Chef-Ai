@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog, KeyRound, Laptop, Smartphone, Tablet, Info, CheckCircle, HelpCircle, X, TrendingUp, Star, ChevronRight, ArrowRight } from "lucide-react";
+import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog, KeyRound, Laptop, Smartphone, Tablet, Info, CheckCircle, HelpCircle, X, TrendingUp, Star, ChevronRight, ArrowRight, Eye, Share2, LineChart, Mail, Link as LinkIcon, Database, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ProfilePage() {
@@ -367,8 +367,86 @@ export default function ProfilePage() {
             </CardFooter>
           </Card>
         </TabsContent>
-         <TabsContent value="privacy">
-          <p>Privacy settings will go here.</p>
+        <TabsContent value="privacy">
+          <Card>
+            <CardHeader className="flex items-center justify-between">
+              <div>
+                <CardTitle>Privacy Settings</CardTitle>
+                <CardDescription>Control your privacy and data sharing preferences</CardDescription>
+              </div>
+              <Shield className="h-5 w-5 text-muted-foreground" />
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <PrivacySection 
+                icon={Eye} 
+                title="Profile Visibility" 
+                description="Who can see your profile?"
+              >
+                <Select defaultValue="public">
+                  <SelectTrigger className="md:w-1/3">
+                    <SelectValue placeholder="Select visibility" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="public">Public</SelectItem>
+                    <SelectItem value="private">Private</SelectItem>
+                    <SelectItem value="friends">Friends Only</SelectItem>
+                  </SelectContent>
+                </Select>
+                 <p className="text-sm text-muted-foreground mt-2">Control who can view your profile and cooking activity</p>
+              </PrivacySection>
+              <PrivacySection 
+                icon={Share2} 
+                title="Profile & Sharing" 
+                description="Control how your profile and recipes are shared"
+              >
+                <div className="space-y-4">
+                  <CheckboxItem id="allow-recipe-sharing" label="Allow Recipe Sharing" description="Let others share your recipes with the community" defaultChecked />
+                  <CheckboxItem id="community-interactions" label="Community Interactions" description="Allow others to comment and rate your recipes" defaultChecked />
+                </div>
+              </PrivacySection>
+              <PrivacySection 
+                icon={LineChart} 
+                title="Data & Analytics" 
+                description="Manage how your cooking data is used"
+              >
+                 <div className="space-y-4">
+                  <CheckboxItem id="activity-tracking" label="Activity Tracking" description="Track your cooking activities for personalized recommendations" defaultChecked />
+                  <CheckboxItem id="cooking-analytics" label="Cooking Analytics" description="Analyze your cooking patterns to improve suggestions" defaultChecked />
+                  <CheckboxItem id="usage-data-collection" label="Usage Data Collection" description="Help improve ChefAI by sharing anonymous usage data" defaultChecked />
+                </div>
+              </PrivacySection>
+               <PrivacySection 
+                icon={Mail} 
+                title="Communications" 
+                description="Choose what notifications you receive"
+              >
+                 <div className="space-y-4">
+                  <CheckboxItem id="email-notifications" label="Email Notifications" description="Receive notifications about your account and recipes" defaultChecked />
+                  <CheckboxItem id="marketing-communications" label="Marketing Communications" description="Receive updates about new features and cooking tips" />
+                </div>
+              </PrivacySection>
+              <PrivacySection 
+                icon={LinkIcon} 
+                title="Third-Party Integration" 
+                description="Control data sharing with external services"
+              >
+                <CheckboxItem id="third-party-data-sharing" label="Third-Party Data Sharing" description="Allow sharing anonymized data with cooking partners" />
+              </PrivacySection>
+              <PrivacySection 
+                icon={Database} 
+                title="Data Management" 
+                description="Export your data or permanently delete your account and all associated data"
+              >
+                <div className="flex gap-4">
+                  <Button variant="outline"><Upload className="mr-2" /> Export My Data</Button>
+                  <Button variant="destructive"><Trash2 className="mr-2" /> Delete Account</Button>
+                </div>
+              </PrivacySection>
+               <div className="flex justify-end pt-4">
+                <Button>Save Privacy Settings</Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
@@ -430,11 +508,12 @@ interface CheckboxItemProps {
   id: string;
   label: string;
   description: string;
+  defaultChecked?: boolean;
 }
 
-const CheckboxItem = ({ id, label, description }: CheckboxItemProps) => (
+const CheckboxItem = ({ id, label, description, defaultChecked }: CheckboxItemProps) => (
   <div className="flex items-start gap-3">
-    <Checkbox id={id} className="mt-1" />
+    <Checkbox id={id} className="mt-1" defaultChecked={defaultChecked} />
     <div className="grid gap-0.5">
       <Label htmlFor={id} className="font-medium">{label}</Label>
       <p className="text-sm text-muted-foreground">{description}</p>
@@ -513,8 +592,28 @@ const ActivityItem = ({ icon: Icon, title, description, category, date }: Activi
     </Button>
   </div>
 );
-    
 
+interface PrivacySectionProps {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}
+
+const PrivacySection = ({ icon: Icon, title, description, children }: PrivacySectionProps) => (
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 py-6 border-b last:border-b-0">
+    <div className="md:col-span-1 flex items-start gap-4">
+      <Icon className="h-5 w-5 text-muted-foreground mt-1" />
+      <div>
+        <h3 className="font-semibold">{title}</h3>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </div>
+    </div>
+    <div className="md:col-span-3">
+      {children}
+    </div>
+  </div>
+);
     
 
     
