@@ -2,14 +2,16 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { BarChart2, Bell, BookOpen, Camera, ChefHat, Clock, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog } from "lucide-react";
+import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog } from "lucide-react";
 
 export default function ProfilePage() {
   return (
@@ -133,7 +135,91 @@ export default function ProfilePage() {
           </div>
         </TabsContent>
         <TabsContent value="preferences">
-          <p>Preferences settings will go here.</p>
+           <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Cooking Preferences</CardTitle>
+                <CardDescription>Customize your recipe recommendations</CardDescription>
+              </div>
+              <Cog className="h-5 w-5 text-muted-foreground" />
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <PreferenceSelect 
+                label="Cooking Skill Level"
+                description="This helps us suggest appropriate recipes"
+                defaultValue="intermediate"
+                options={[
+                  { value: "beginner", label: "Beginner" },
+                  { value: "intermediate", label: "Intermediate" },
+                  { value: "advanced", label: "Advanced" },
+                ]}
+              />
+              <PreferenceSelect 
+                label="Preferred Cooking Time"
+                description="How much time do you usually have for cooking?"
+                defaultValue="medium"
+                options={[
+                  { value: "short", label: "Under 30 min" },
+                  { value: "medium", label: "30-60 min" },
+                  { value: "long", label: "Over 60 min" },
+                ]}
+              />
+              <PreferenceSelect 
+                label="Spice Tolerance"
+                description="How spicy do you like your food?"
+                defaultValue="medium"
+                options={[
+                  { value: "none", label: "None" },
+                  { value: "mild", label: "Mild" },
+                  { value: "medium", label: "Medium" },
+                  { value: "hot", label: "Hot" },
+                ]}
+              />
+              <PreferenceSelect 
+                label="Typical Serving Size"
+                description="How many people do you usually cook for?"
+                defaultValue="2-4"
+                options={[
+                  { value: "1", label: "1 Person" },
+                  { value: "2-4", label: "2-4 People" },
+                  { value: "5+", label: "5+ People" },
+                ]}
+              />
+               <PreferenceSelect 
+                label="Favorite Cuisines"
+                description="Select your preferred cuisine types"
+                placeholder="Select an option"
+                options={[
+                  { value: "italian", label: "Italian" },
+                  { value: "mexican", label: "Mexican" },
+                  { value: "chinese", label: "Chinese" },
+                  { value: "indian", label: "Indian" },
+                  { value: "american", label: "American" },
+                ]}
+              />
+              <div>
+                <Label className="text-base font-semibold">Dietary Restrictions</Label>
+                <p className="text-sm text-muted-foreground mb-4">Select any dietary preferences or restrictions</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                  <div className="space-y-4">
+                    <CheckboxItem id="vegetarian" label="Vegetarian" description="No meat or fish" />
+                    <CheckboxItem id="gluten-free" label="Gluten-Free" description="No gluten-containing ingredients" />
+                    <CheckboxItem id="ketogenic" label="Ketogenic" description="Low-carb, high-fat diet" />
+                    <CheckboxItem id="low-sodium" label="Low Sodium" description="Reduced salt intake" />
+                  </div>
+                  <div className="space-y-4">
+                    <CheckboxItem id="vegan" label="Vegan" description="No animal products" />
+                    <CheckboxItem id="dairy-free" label="Dairy-Free" description="No dairy products" />
+                    <CheckboxItem id="paleo" label="Paleo" description="Whole foods, no processed items" />
+                    <CheckboxItem id="high-protein" label="High Protein" description="Focus on high protein content" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-end pt-4">
+                <Button>Save Preferences</Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="security">
           <p>Security settings will go here.</p>
@@ -174,5 +260,47 @@ const StatCard = ({ icon: Icon, value, label, unit, tooltip }: StatCardProps) =>
       </Tooltip>
    </TooltipProvider>
 )
+
+interface PreferenceSelectProps {
+  label: string;
+  description: string;
+  defaultValue?: string;
+  placeholder?: string;
+  options: { value: string; label: string }[];
+}
+
+const PreferenceSelect = ({ label, description, defaultValue, placeholder, options }: PreferenceSelectProps) => (
+  <div className="grid gap-2">
+    <Label>{label}</Label>
+    <Select defaultValue={defaultValue}>
+      <SelectTrigger>
+        <SelectValue placeholder={placeholder || "Select an option"} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map(option => (
+          <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+    <p className="text-sm text-muted-foreground">{description}</p>
+  </div>
+);
+
+interface CheckboxItemProps {
+  id: string;
+  label: string;
+  description: string;
+}
+
+const CheckboxItem = ({ id, label, description }: CheckboxItemProps) => (
+  <div className="flex items-start gap-3">
+    <Checkbox id={id} className="mt-1" />
+    <div className="grid gap-0.5">
+      <Label htmlFor={id} className="font-medium">{label}</Label>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+  </div>
+);
+    
 
     
