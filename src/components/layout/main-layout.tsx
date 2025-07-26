@@ -25,7 +25,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components/ui/avatar';
-import { LogOut } from 'lucide-react';
+import { LogOut, ChefHat } from 'lucide-react';
 import { ThemeProvider } from 'next-themes';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
@@ -45,15 +45,24 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 }
 
 function AppSidebar() {
-  const { isMobile } = useSidebar();
+  const { isMobile, state } = useSidebar();
   return (
     <Sidebar
       collapsible={isMobile ? 'offcanvas' : 'icon'}
       className="border-r"
     >
-      <SidebarHeader className="flex items-center justify-center p-4">
-        <h1 className="text-2xl font-bold font-headline text-primary">C</h1>
-        <h1 className="text-xl font-semibold font-headline group-data-[state=expanded]:block hidden">hefAI</h1>
+      <SidebarHeader className="p-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-primary/20 text-primary p-2 rounded-lg">
+            <ChefHat className="h-6 w-6" />
+          </div>
+          <div className="group-data-[state=expanded]:block hidden">
+            <h2 className="text-lg font-bold font-headline">ChefAI</h2>
+            <p className="text-xs text-muted-foreground">
+              Your AI Cooking Companion
+            </p>
+          </div>
+        </div>
         <SidebarTrigger className="absolute right-2 top-3 group-data-[state=expanded]:block hidden" />
       </SidebarHeader>
       <SidebarContent>
