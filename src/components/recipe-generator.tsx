@@ -21,8 +21,8 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { ChefHat, Loader2, Salad, Sparkles } from 'lucide-react';
-import React, { useState, useTransition } from 'react';
+import { ChefHat, Loader2, Salad, Sparkles, Upload } from 'lucide-react';
+import React, { useState, useTransition, useRef } from 'react';
 
 const availableIngredients = [
   'Chicken', 'Beef', 'Pork', 'Fish', 'Tofu', 'Eggs', 'Milk', 'Cheese',
@@ -42,6 +42,7 @@ export default function RecipeGenerator() {
   const [recipe, setRecipe] = useState<GenerateRecipeFromIngredientsOutput | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleIngredientChange = (ingredient: string) => {
     setSelectedIngredients((prev) =>
@@ -84,6 +85,18 @@ export default function RecipeGenerator() {
     });
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Placeholder for image recognition logic
+      console.log('Image uploaded:', file.name);
+      toast({
+        title: 'Image Uploaded',
+        description: 'Ingredient recognition from image is not implemented yet.',
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
       <Card className="lg:col-span-1 sticky top-24">
@@ -98,7 +111,20 @@ export default function RecipeGenerator() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label className="text-lg font-semibold">Ingredients</Label>
+            <div className="flex justify-between items-center mb-2">
+              <Label className="text-lg font-semibold">Ingredients</Label>
+              <Button variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Image
+              </Button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+            </div>
             <ScrollArea className="h-64 mt-2 rounded-md border p-4">
               <div className="grid grid-cols-2 gap-4">
                 {availableIngredients.map((ingredient) => (
@@ -177,6 +203,20 @@ export default function RecipeGenerator() {
                   ))}
                 </ul>
               </div>
+              <Separator />
+               {recipe.nutrition && (
+                <div>
+                  <h3 className="text-xl font-headline font-bold mb-2">Nutritional Information</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    {Object.entries(recipe.nutrition).map(([key, value]) => (
+                      <div key={key} className="bg-muted p-3 rounded-lg">
+                        <p className="font-semibold capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
+                        <p className="text-lg">{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <Separator />
               <div>
                 <h3 className="text-xl font-headline font-bold mb-2">Instructions</h3>

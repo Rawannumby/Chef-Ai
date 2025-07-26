@@ -25,6 +25,12 @@ const GenerateRecipeFromIngredientsOutputSchema = z.object({
   steps: z.array(z.string()).describe('A list of steps to prepare the recipe.'),
   requiredIngredients: z.array(z.string()).describe('A list of ingredients required for the recipe.'),
   alternativeSuggestions: z.array(z.string()).describe('A list of alternative suggestions for the recipe.'),
+  nutrition: z.object({
+    calories: z.string().describe('Estimated calories for the recipe.'),
+    protein: z.string().describe('Estimated protein in grams.'),
+    carbs: z.string().describe('Estimated carbohydrates in grams.'),
+    fat: z.string().describe('Estimated fat in grams.'),
+  }).describe('Nutritional information for the recipe.').optional(),
 });
 export type GenerateRecipeFromIngredientsOutput = z.infer<typeof GenerateRecipeFromIngredientsOutputSchema>;
 
@@ -36,7 +42,7 @@ const prompt = ai.definePrompt({
   name: 'generateRecipeFromIngredientsPrompt',
   input: {schema: GenerateRecipeFromIngredientsInputSchema},
   output: {schema: GenerateRecipeFromIngredientsOutputSchema},
-  prompt: `You are a world-class chef specializing in creating recipes based on available ingredients and dietary preferences.
+  prompt: `You are a world-class chef and nutritionist specializing in creating recipes based on available ingredients and dietary preferences.
 
   Generate a recipe based on the following ingredients:
   {{#each ingredients}}
@@ -58,6 +64,7 @@ const prompt = ai.definePrompt({
   {{/if}}
 
   Provide the recipe name, a list of steps to prepare the recipe, a list of required ingredients, and alternative suggestions.
+  Also provide an estimated nutritional breakdown (calories, protein, carbs, fat).
   Ensure the response is a valid JSON.
   `, 
 });
