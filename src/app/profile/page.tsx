@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog, KeyRound, Laptop, Smartphone, Tablet, Info, CheckCircle, HelpCircle, X } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog, KeyRound, Laptop, Smartphone, Tablet, Info, CheckCircle, HelpCircle, X, TrendingUp, Star, ChevronRight, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function ProfilePage() {
   return (
@@ -314,7 +316,56 @@ export default function ProfilePage() {
           </Card>
         </TabsContent>
         <TabsContent value="activity">
-          <p>Activity feed will go here.</p>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Recent Activity</CardTitle>
+                  <CardDescription>Your cooking journey and recipe interactions</CardDescription>
+                </div>
+                <TrendingUp className="h-5 w-5 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[450px]">
+                <div className="space-y-4">
+                  <ActivityItem 
+                    icon={ChefHat}
+                    title="Generated Creamy Mushroom Risotto"
+                    description="Used ingredients: mushrooms, arborio rice, parmesan, white wine"
+                    category="Recipe Generated"
+                    date="Jan 22"
+                  />
+                  <ActivityItem 
+                    icon={Heart}
+                    title="Added Spicy Thai Basil Chicken to favorites"
+                    description="Saved for quick access in your recipe collection"
+                    category="Recipe Favorited"
+                    date="Jan 22"
+                  />
+                  <ActivityItem 
+                    icon={Flame}
+                    title="Cooked Mediterranean Quinoa Bowl"
+                    description="Rated 5 stars and left a review"
+                    category="Recipe Cooked"
+                    date="Jan 21"
+                  />
+                   <ActivityItem 
+                    icon={Cog}
+                    title="Updated cooking preferences"
+                    description="Changed skill level to intermediate and added dietary restrictions"
+                    category="Profile Updated"
+                    date="Jan 21"
+                  />
+                </div>
+              </ScrollArea>
+            </CardContent>
+            <CardFooter>
+               <Button variant="link" asChild className="w-full">
+                  <Link href="#">
+                    View All Activity <ArrowRight className="ml-2" />
+                  </Link>
+                </Button>
+            </CardFooter>
+          </Card>
         </TabsContent>
          <TabsContent value="privacy">
           <p>Privacy settings will go here.</p>
@@ -434,6 +485,36 @@ const DeviceItem = ({ icon: Icon, name, location, lastActive, isCurrent }: Devic
     )}
   </div>
 )
+
+interface ActivityItemProps {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  category: string;
+  date: string;
+}
+
+const ActivityItem = ({ icon: Icon, title, description, category, date }: ActivityItemProps) => (
+  <div className="flex items-start justify-between py-3 border-b last:border-b-0">
+    <div className="flex items-start gap-4">
+      <div className="p-2 bg-muted rounded-full">
+        <Icon className="h-5 w-5 text-muted-foreground" />
+      </div>
+      <div>
+        <p className="font-semibold">{title}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-xs text-muted-foreground mt-1">
+          {category} &bull; {date}
+        </p>
+      </div>
+    </div>
+    <Button variant="ghost" size="icon" className="h-8 w-8">
+      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+    </Button>
+  </div>
+);
+    
+
     
 
     
