@@ -162,9 +162,9 @@ export default function RecipeGenerator() {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
       <div className="lg:col-span-1">
         <Card>
-          <CardHeader>
+          <CardHeader className="p-4 border-b">
             <div className="flex justify-between items-center">
-              <CardTitle className="text-xl">
+              <CardTitle className="text-lg font-semibold">
                 Select Ingredients
               </CardTitle>
               <p className="text-sm text-muted-foreground">{selectedIngredients.length} selected</p>
@@ -175,7 +175,7 @@ export default function RecipeGenerator() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Search ingredients..." 
-                className="pl-9 bg-muted border-0 focus-visible:ring-primary"
+                className="pl-9"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -193,7 +193,7 @@ export default function RecipeGenerator() {
               className="hidden"
             />
             
-            <ScrollArea className="h-[calc(100vh-200px)]">
+            <ScrollArea className="h-[calc(100vh-320px)]">
               <div className="space-y-4 pr-4">
                 <div>
                   <Label className="text-base font-semibold">Dietary Preferences</Label>
@@ -219,7 +219,7 @@ export default function RecipeGenerator() {
 
               {filteredIngredients.map(([category, ingredients]) => (
                   <div key={category}>
-                    <p className="font-semibold text-muted-foreground text-sm mb-2 uppercase tracking-wider">{category}</p>
+                    <p className="font-semibold text-muted-foreground text-sm my-2 uppercase tracking-wider">{category}</p>
                     <div className="space-y-1">
                       {ingredients.map((ingredient) => (
                         <div key={ingredient.name} className="flex items-center p-2 rounded-md hover:bg-muted">
