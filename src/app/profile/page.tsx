@@ -11,7 +11,8 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { BarChart2, BookOpen, Camera, ChefHat, Clock, Cog, Flame, Heart, Lock, Palette, Shield, Upload, User, UserCog, KeyRound, Laptop, Smartphone, Tablet, Info, CheckCircle, HelpCircle, X } from "lucide-react";
 
 export default function ProfilePage() {
   return (
@@ -222,7 +223,95 @@ export default function ProfilePage() {
           </Card>
         </TabsContent>
         <TabsContent value="security">
-          <p>Security settings will go here.</p>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Account Security</CardTitle>
+                <CardDescription>Manage your account security and login settings</CardDescription>
+              </div>
+              <Shield className="h-5 w-5 text-muted-foreground" />
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <SecurityInfoCard
+                  icon={Clock}
+                  title="Last Login"
+                  value="Jan 22, 2025, 02:30 PM"
+                  description="San Francisco, CA"
+                />
+                <SecurityInfoCard
+                  icon={HelpCircle}
+                  title="Connected Devices"
+                  value="3 active devices"
+                />
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <KeyRound className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">Password & Authentication</h3>
+                </div>
+                <RadioGroup defaultValue="none" className="flex items-center gap-8">
+                  <div className="flex items-center space-x-2">
+                    <Button variant="outline">Change Password</Button>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="2fa" id="2fa" />
+                    <Label htmlFor="2fa">Enable 2FA</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Laptop className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">Connected Devices</h3>
+                </div>
+                <div className="space-y-2">
+                  <DeviceItem 
+                    icon={Laptop} 
+                    name="MacBook Pro" 
+                    location="San Francisco, CA" 
+                    lastActive="Jan 22, 2025, 04:45 PM" 
+                    isCurrent 
+                  />
+                  <DeviceItem 
+                    icon={Smartphone} 
+                    name="iPhone 15" 
+                    location="San Francisco, CA" 
+                    lastActive="Jan 22, 2025, 03:20 PM" 
+                  />
+                  <DeviceItem 
+                    icon={Tablet} 
+                    name="iPad Air" 
+                    location="San Francisco, CA" 
+                    lastActive="Jan 21, 2025, 07:30 PM" 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                 <div className="flex items-center gap-2">
+                  <Info className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">Security Tips</h3>
+                </div>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    Use a strong, unique password for your account.
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    Enable two-factor authentication for extra security.
+                  </li>
+                   <li className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    Regularly review and remove unused connected devices.
+                  </li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="activity">
           <p>Activity feed will go here.</p>
@@ -301,6 +390,50 @@ const CheckboxItem = ({ id, label, description }: CheckboxItemProps) => (
     </div>
   </div>
 );
+    
+interface SecurityInfoCardProps {
+  icon: React.ElementType;
+  title: string;
+  value: string;
+  description?: string;
+}
+
+const SecurityInfoCard = ({ icon: Icon, title, value, description }: SecurityInfoCardProps) => (
+  <div className="p-4 bg-muted/50 rounded-lg flex items-start gap-4">
+    <Icon className="h-6 w-6 text-muted-foreground mt-1" />
+    <div>
+      <p className="text-sm text-muted-foreground">{title}</p>
+      <p className="font-semibold">{value}</p>
+      {description && <p className="text-xs text-muted-foreground">{description}</p>}
+    </div>
+  </div>
+)
+
+interface DeviceItemProps {
+  icon: React.ElementType;
+  name: string;
+  location: string;
+  lastActive: string;
+  isCurrent?: boolean;
+}
+
+const DeviceItem = ({ icon: Icon, name, location, lastActive, isCurrent }: DeviceItemProps) => (
+  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+    <div className="flex items-center gap-4">
+      <Icon className="h-6 w-6 text-muted-foreground" />
+      <div>
+        <p className="font-semibold">{name} {isCurrent && <span className="text-xs text-green-500 font-medium ml-2">Current</span>}</p>
+        <p className="text-xs text-muted-foreground">{location} • Last active {lastActive}</p>
+      </div>
+    </div>
+    {!isCurrent && (
+      <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-500/10">
+        <X className="mr-2" />
+        Remove
+      </Button>
+    )}
+  </div>
+)
     
 
     
