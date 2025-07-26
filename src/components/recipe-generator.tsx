@@ -62,6 +62,7 @@ const ingredientsData = {
     { name: 'Asparagus', tags: ['vegetarian', 'vegan', 'gluten-free'] },
     { name: 'Cauliflower', tags: ['vegetarian', 'vegan', 'gluten-free'] },
     { name: 'Cabbage', tags: ['vegetarian', 'vegan', 'gluten-free'] },
+    { name: 'Bitter Gourd', tags: ['vegetarian', 'vegan', 'gluten-free'] },
   ],
   DAIRY: [
     { name: 'Milk', tags: ['vegetarian'] },
