@@ -157,7 +157,7 @@ export default function RecipeGenerator() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
       <div className="lg:col-span-1">
-        <Card className="sticky top-24 w-[473px] h-[700px] flex flex-col">
+        <Card className="sticky top-24">
           <CardHeader className="border-b">
             <div className="flex justify-between items-center">
               <CardTitle className="font-headline text-xl">
@@ -166,7 +166,7 @@ export default function RecipeGenerator() {
               <p className="text-sm text-muted-foreground">{selectedIngredients.length} selected</p>
             </div>
           </CardHeader>
-          <CardContent className="p-4 space-y-4 flex-grow flex flex-col">
+          <CardContent className="p-4 space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
@@ -209,7 +209,7 @@ export default function RecipeGenerator() {
               </div>
             </div>
             
-            <ScrollArea className="flex-grow">
+            <ScrollArea className="h-64">
               <div className="space-y-4 pr-4">
               {filteredIngredients.map(([category, ingredients]) => (
                   <div key={category}>
