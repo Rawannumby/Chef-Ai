@@ -4,43 +4,38 @@
 import { useState } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Settings, Shield, Palette, Bell, HardDrive, LifeBuoy, Info, Film, Rows4, Columns4 } from "lucide-react";
-import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Settings, Shield, Palette, Bell, KeyRound, MonitorSmartphone, LogOut, Sun, Moon, Type, Languages, RefreshCw, Mail, Smartphone, Newspaper, Utensils, Star, Rows4, Columns4 } from "lucide-react";
+import { useTheme } from 'next-themes';
 
 const settingsItems = [
   {
-    value: "item-1",
+    value: "security",
     icon: Shield,
     title: "Account Security",
     description: "Password, authentication, and security settings",
-    content: "Here you can change your password, set up two-factor authentication, and review your recent login activity."
   },
   {
-    value: "item-2",
+    value: "display",
     icon: Palette,
     title: "Display Preferences",
     description: "Customize appearance, theme, and language settings",
-    content: "Choose your preferred theme (light/dark), adjust font sizes, and select your language."
   },
   {
-    value: "item-3",
+    value: "notifications",
     icon: Bell,
     title: "Notification Settings",
     description: "Manage email, push notifications, and cooking reminders",
-    content: "Control which notifications you receive, including new recipe alerts, updates, and reminders."
   },
-  {
-    value: "item-4",
-    icon: HardDrive,
-    title: "Data Management",
-    description: "Export data, clear cache, and manage account deletion",
-    content: "You can export your personal data, clear the application cache to free up space, or permanently delete your account."
-  }
 ];
 
 export default function SettingsPage() {
-  const [openItems, setOpenItems] = useState<string[]>([]);
+  const [openItems, setOpenItems] = useState<string[]>(['security', 'display', 'notifications']);
+  const { theme, setTheme } = useTheme();
 
   const handleExpandAll = () => {
     setOpenItems(settingsItems.map(item => item.value));
@@ -51,92 +46,193 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-start gap-4">
-        <div className="p-3 bg-muted rounded-lg">
-          <Settings className="h-8 w-8 text-foreground" />
-        </div>
+    <div className="space-y-6">
+       <header className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold font-headline">Application Settings</h1>
-          <p className="text-muted-foreground">Customize your ChefAI experience and manage your account</p>
+          <h1 className="text-3xl font-bold font-headline">Settings</h1>
+          <p className="text-muted-foreground">Manage your account and preferences</p>
         </div>
-      </div>
-
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" size="sm" onClick={handleExpandAll}>
-          <Rows4 className="mr-2 h-4 w-4" />
-          Expand All
-        </Button>
-        <Button variant="outline" size="sm" onClick={handleCollapseAll}>
-          <Columns4 className="mr-2 h-4 w-4" />
-          Collapse All
-        </Button>
-      </div>
+        <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleExpandAll}>
+                <Rows4 className="mr-2 h-4 w-4" />
+                Expand All
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleCollapseAll}>
+                <Columns4 className="mr-2 h-4 w-4" />
+                Collapse All
+            </Button>
+        </div>
+      </header>
 
       <Accordion type="multiple" value={openItems} onValueChange={setOpenItems} className="w-full space-y-4">
-        {settingsItems.map((item) => {
-           const Icon = item.icon;
-           return (
-            <AccordionItem key={item.value} value={item.value} className="bg-card border rounded-lg px-4">
-              <AccordionTrigger className="hover:no-underline">
-                <div className="flex items-center gap-4">
-                  <Icon className="h-6 w-6 text-muted-foreground" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-left">{item.title}</h3>
-                    <p className="text-sm text-muted-foreground text-left">{item.description}</p>
-                  </div>
+        <AccordionItem value="security" className="border rounded-lg bg-card overflow-hidden">
+          <AccordionTrigger className="p-6 hover:no-underline">
+            <div className="flex items-center gap-4">
+                <Shield className="h-6 w-6 text-muted-foreground" />
+                <div>
+                    <h3 className="text-lg font-semibold text-left">Account Security</h3>
+                    <p className="text-sm text-muted-foreground text-left">Password, authentication, and security settings</p>
                 </div>
-              </AccordionTrigger>
-              <AccordionContent className="pl-14">
-                {item.content}
-              </AccordionContent>
-            </AccordionItem>
-          )
-        })}
-      </Accordion>
-      
-      <Card className="bg-card">
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-4">
-             <LifeBuoy className="h-8 w-8 text-muted-foreground" />
-            <div>
-              <h3 className="text-xl font-bold font-headline">Need Help?</h3>
-              <p className="text-muted-foreground">Can't find what you're looking for? Our support team is here to help.</p>
             </div>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-4">
-            <Button variant="outline" asChild>
-              <Link href="#">
-                <Info className="mr-2 h-4 w-4" />
-                Contact Support
-              </Link>
-            </Button>
-             <Button variant="outline" asChild>
-              <Link href="#">
-                <Info className="mr-2 h-4 w-4" />
-                User Guide
-              </Link>
-            </Button>
-             <Button variant="outline" asChild>
-              <Link href="#">
-                <Film className="mr-2 h-4 w-4" />
-                Video Tutorials
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="space-y-6">
+                <SettingsRow title="Change Password" description="Update your account password for better security">
+                    <Button variant="outline" size="sm"><KeyRound className="mr-2"/>Change</Button>
+                </SettingsRow>
+                 <SettingsRow title="Two-Factor Authentication" description="Add an extra layer of security to your account">
+                    <Switch />
+                </SettingsRow>
+                 <SettingsRow title="Active Sessions" description="Manage your active login sessions">
+                    <Button variant="outline" size="sm"><MonitorSmartphone className="mr-2"/>View Sessions</Button>
+                </SettingsRow>
+                 <SettingsRow title="Sign Out" description="Sign out from your account on this device" isLast>
+                    <Button variant="destructive" size="sm"><LogOut className="mr-2"/>Sign Out</Button>
+                </SettingsRow>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="display" className="border rounded-lg bg-card overflow-hidden">
+           <AccordionTrigger className="p-6 hover:no-underline">
+                <div className="flex items-center gap-4">
+                    <Palette className="h-6 w-6 text-muted-foreground" />
+                    <div>
+                        <h3 className="text-lg font-semibold text-left">Display Preferences</h3>
+                        <p className="text-sm text-muted-foreground text-left">Customize appearance, theme, and language settings</p>
+                    </div>
+                </div>
+           </AccordionTrigger>
+           <AccordionContent className="px-6 pb-6">
+               <div className="space-y-6">
+                    <SettingsRow title="Dark Mode" description="Switch between light and dark themes">
+                         <div className="flex items-center gap-2">
+                            <Sun className="h-5 w-5" />
+                            <Switch checked={theme === 'dark'} onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')} />
+                            <Moon className="h-5 w-5" />
+                        </div>
+                    </SettingsRow>
+                    <SettingsRow title="Font Size" description="">
+                        <Select defaultValue="default">
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select size" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="small">Small</SelectItem>
+                                <SelectItem value="default">Default</SelectItem>
+                                <SelectItem value="large">Large</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </SettingsRow>
+                    <SettingsRow title="Language" description="">
+                         <Select defaultValue="english">
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Select language" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="english">English</SelectItem>
+                                <SelectItem value="spanish">Español</SelectItem>
+                                <SelectItem value="french">Français</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </SettingsRow>
+                     <SettingsRow title="Color Theme" description="" isLast>
+                         <div className="flex flex-col items-end gap-4">
+                            <Select defaultValue="warm">
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Select theme" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="warm">Warm</SelectItem>
+                                    <SelectItem value="cool">Cool</SelectItem>
+                                    <SelectItem value="vibrant">Vibrant</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <div className="flex items-center gap-2">
+                                <p className="text-sm text-muted-foreground mr-2">Preview:</p>
+                                <div className="h-4 w-4 rounded-full bg-green-500"></div>
+                                <div className="h-4 w-4 rounded-full bg-yellow-500"></div>
+                                <div className="h-4 w-4 rounded-full bg-teal-500"></div>
+                                <p className="text-sm text-muted-foreground ml-2">Current theme colors</p>
+                           </div>
+                         </div>
+                    </SettingsRow>
+                    <div className="flex justify-end pt-4">
+                        <Button variant="ghost"><RefreshCw className="mr-2"/>Reset to Defaults</Button>
+                    </div>
+               </div>
+           </AccordionContent>
+        </AccordionItem>
 
-      <footer className="text-center text-xs text-muted-foreground pt-8">
-        <div className="flex justify-between items-center">
-            <p>ChefAI v2.1.0  •  Last updated: 26/7/2025</p>
-            <div className="flex gap-4">
-                <Link href="#" className="hover:text-primary">Privacy Policy</Link>
-                <Link href="#" className="hover:text-primary">Terms of Service</Link>
-            </div>
-        </div>
-        <p className="mt-4">© 2025 ChefAI. All rights reserved.</p>
-      </footer>
+        <AccordionItem value="notifications" className="border rounded-lg bg-card overflow-hidden">
+           <AccordionTrigger className="p-6 hover:no-underline">
+                <div className="flex items-center gap-4">
+                    <Bell className="h-6 w-6 text-muted-foreground" />
+                    <div>
+                        <h3 className="text-lg font-semibold text-left">Notification Settings</h3>
+                        <p className="text-sm text-muted-foreground text-left">Manage email, push notifications, and cooking reminders</p>
+                    </div>
+                </div>
+           </AccordionTrigger>
+           <AccordionContent className="px-6 pb-6">
+                <div className="space-y-4">
+                    <div>
+                        <h4 className="font-semibold text-base mb-2">General Notifications</h4>
+                        <div className="space-y-4">
+                            <CheckboxRow id="email-notifications" label="Email Notifications" description="Receive notifications via email" defaultChecked />
+                            <CheckboxRow id="push-notifications" label="Push Notifications" description="Browser and mobile push notifications" defaultChecked />
+                            <CheckboxRow id="weekly-digest" label="Weekly Digest" description="Summary of your cooking activity and new recipes" defaultChecked />
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-base mb-2">Recipe Notifications</h4>
+                        <div className="space-y-4">
+                            <CheckboxRow id="cooking-reminders" label="Cooking Reminders" description="Reminders for meal planning and cooking times" />
+                            <CheckboxRow id="favorite-updates" label="Favorite Recipe Updates" description="Get notified when your favorite recipes are updated" defaultChecked />
+                        </div>
+                    </div>
+                </div>
+                <div className="flex justify-end pt-6">
+                    <Button>Save Notification Settings</Button>
+                </div>
+           </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }
+
+
+interface SettingsRowProps {
+    title: string;
+    description: string;
+    children: React.ReactNode;
+    isLast?: boolean;
+}
+
+const SettingsRow = ({ title, description, children, isLast = false }: SettingsRowProps) => (
+  <div className={`flex justify-between items-center ${!isLast && 'border-b pb-6'}`}>
+    <div>
+      <p className="font-medium">{title}</p>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+    {children}
+  </div>
+);
+
+interface CheckboxRowProps {
+  id: string;
+  label: string;
+  description: string;
+  defaultChecked?: boolean;
+}
+
+const CheckboxRow = ({ id, label, description, defaultChecked }: CheckboxRowProps) => (
+  <div className="flex items-start gap-3">
+    <Checkbox id={id} className="mt-1" defaultChecked={defaultChecked} />
+    <div className="grid gap-0.5">
+      <Label htmlFor={id} className="font-medium">{label}</Label>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+  </div>
+);
