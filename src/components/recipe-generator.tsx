@@ -223,9 +223,9 @@ export default function RecipeGenerator() {
               {filteredIngredients.map(([category, ingredients]) => (
                   <div key={category}>
                     <p className="font-semibold text-muted-foreground text-sm my-2 uppercase tracking-wider">{category}</p>
-                    <div className="space-y-1">
+                    <div className="space-y-2">
                       {ingredients.map((ingredient) => (
-                        <div key={ingredient.name} className="flex items-center p-2 rounded-md hover:bg-muted">
+                        <div key={ingredient.name} className="flex items-center p-3 rounded-md border bg-card hover:bg-muted">
                           <Checkbox
                             id={ingredient.name}
                             onCheckedChange={() => handleIngredientChange(ingredient.name)}
