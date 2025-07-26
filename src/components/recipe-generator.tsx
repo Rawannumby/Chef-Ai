@@ -49,6 +49,7 @@ const ingredientsData = {
         { name: 'Carrots', tags: ['vegetarian', 'vegan', 'gluten-free']},
         { name: 'Zucchini', tags: ['vegetarian', 'vegan', 'gluten-free']},
         { name: 'Mushrooms', tags: ['vegetarian', 'vegan', 'gluten-free']},
+        { name: 'Bitter Gourd', tags: ['vegetarian', 'vegan', 'gluten-free']},
     ],
     DAIRY: [
         { name: 'Milk', tags: ['vegetarian'] },
